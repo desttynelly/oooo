@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Code</title>
+    <style>
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        input {
+            padding: 10px;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            width: 100%;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Click to Generate a Random Code</h2>
+        <input type="text" id="codeDisplay" placeholder="Your code will appear here" readonly />
+        <button id="getcode">Get Code</button>
+    </div>
+
+    <script>
+        function generateCode() {
+            const code = Math.floor(10000 + Math.random() * 90000).toString();
+            document.getElementById('codeDisplay').value = code;
+        }
+
+        document.getElementById("getcode").addEventListener("click", function(){
+    //   event.preventDefault();
+      window.alert("red")
+      generateCode();
+    })
+
+
+    const mongoose = require('mongoose');
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/yourDatabase', { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Schema to store the latest number
+const counterSchema = new mongoose.Schema({
+  latestNumber: { type: Number, default: 1000 }
+});
+
+const Counter = mongoose.model('Counter', counterSchema);
+
+async function getNextNumber() {
+  let counter = await Counter.findOne();
+  
+  if (!counter) {
+    // Create counter if it doesn’t exist
+    counter = new Counter({ latestNumber: 1000 });
+  }
+  
+  const nextNumber = counter.latestNumber;
+  counter.latestNumber += 1;  // Increment for the next call
+
+  await counter.save();  // Save back to the database
+
+  return nextNumber;
+}
+
+// Example usage
+getNextNumber().then((num) => {
+  console.log("Generated Number:", num);  // Outputs the next number in sequence
+}).catch((err) => {
+  console.error("Error generating number:", err);
+});
+
+    </script>
+</body>
+</html>
